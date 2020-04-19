@@ -1,0 +1,22 @@
+plugins {
+	id 'java'
+	id "io.franzbecker.gradle-lombok" version '1.14'
+}
+
+group = 'io.github.ddk-prog'
+version = '1.0.0'
+sourceCompatibility = '1.8'
+
+ext {
+	prometheusVersion = '0.8.1'
+	cxfVersion = '3.3.6'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.apache.cxf:cxf-core:${cxfVersion}"
+	implementation "io.prometheus:simpleclient_pushgateway:${prometheusVersion}"
+}
