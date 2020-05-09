@@ -2,11 +2,12 @@
 
 Collects the following metrics for each endpoint and operation 
 
-    cxf_requests_total      - total number of incoming cxf requests,
-    cxf_requests_success    - total number of successfully processed cxf requests,
-    cxf_requests_failed     - total number of failed cxf requests,
-    cxf_requests_seconds    - execution time of cxf request.
+    cxf_requests_total       - total number of incoming cxf requests,
+    cxf_requests_success     - total number of successfully processed cxf requests,
+    cxf_requests_failed      - total number of failed cxf requests,
+    cxf_requests_seconds_sum - total execution time of cxf requests.
 
+Besides, histograms are reported for execution time statistics.
 For example, for configuration bellow
 
     @Bean
@@ -41,7 +42,7 @@ To enable cxf metrics for prometheus add dependency to your pom.xml.
     <dependency>
         <groupId>io.github.ddk-prog</groupId>
         <artifactId>cxf-prometheus-metrics</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.1</version>
     </dependency>
  
 Add the following bean to your application configuration.

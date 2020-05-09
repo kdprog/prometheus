@@ -1,6 +1,6 @@
 package io.prometheus.prometheus;
 
-import io.prometheus.client.Gauge;
+import io.prometheus.client.Histogram;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.Message;
 
@@ -27,27 +27,35 @@ public class PrometheusMetricsService {
     }
 
     public PrometheusMetricsService startTimer(final PrometheusMetrics metric) {
-        exchange.putIfAbsent(
-            metric.name(),
-            metric.getMetric()
-                .labels(labels)
-                .startTimer()
-        );
+        metric.getHistogram()
+            .ifPresent(
+                hist ->
+                    exchange.putIfAbsent(
+                        metric.name(),
+                        hist
+                            .labels(labels)
+                            .startTimer()
+                    )
+            );
         return this;
     }
 
     public PrometheusMetricsService stopTimer(final PrometheusMetrics metric) {
         Optional.ofNullable(exchange.get(metric.name()))
-            .filter(timer -> Gauge.Timer.class.isAssignableFrom(timer.getClass()))
-            .map(timer -> (Gauge.Timer) timer)
-            .ifPresent(Gauge.Timer::setDuration);
+            .filter(timer -> Histogram.Timer.class.isAssignableFrom(timer.getClass()))
+            .map(timer -> (Histogram.Timer) timer)
+            .ifPresent(Histogram.Timer::observeDuration);
         return this;
     }
 
     public PrometheusMetricsService inc(final PrometheusMetrics metric) {
-        metric.getMetric()
-            .labels(labels)
-            .inc();
+        metric.getGauge()
+            .ifPresent(
+                gauge ->
+                    gauge
+                        .labels(labels)
+                        .inc()
+            );
         return this;
     }
 
